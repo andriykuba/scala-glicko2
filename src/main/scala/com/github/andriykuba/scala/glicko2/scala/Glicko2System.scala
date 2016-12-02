@@ -9,95 +9,142 @@ import scala.annotation.tailrec
  * 
  * @see <a href="http://www.glicko.net/glicko/glicko2.pdf">Example of the Glicko-2 system</a>.
  * 
+ * <p>
  * The Double calculations are not
  * precision and the paper has some inaccuracy in calculations in the part of
  * rounding and precision digits.
+ * </p>
+ * <br><br>In the paper:
  * 
- * In the paper:
+ * <pre>{@code
+ * r` = −0.2069(173.7178) + 1500 = 1464.06  
+ * }</pre>
  * 
- * 	r` = −0.2069(173.7178) + 1500 = 1464.06  
+ * <br>In the case of Double calculation:
+ *
+ * <pre>{@code
+ * r` = −0.2069(173.7178) + 1500 = 1464.05778718
+ * }</pre>
  * 
- * In the case of Double calculation:
- * 
- *  r` = −0.2069(173.7178) + 1500 = 1464.05778718
- * 
+ * <p>
  * It rounded to 1464.06 that is correct, but, if we use Double, we can receive result like this
+ * </p>
  * 
- * 	r` = -0.20694097869815928 * (173.7178) + 1500 = 1464.05066845070891
+ * <pre>{@code
+ * r` = -0.20694097869815928 * (173.7178) + 1500 = 1464.05066845070891
+ * }</pre>
  * 
+ * <p>
  * This result could be rounded to 1464.05. 
+ * </p>
  * 
+ * <p>
  * The calculation in paper has classic error of rounding in the middle of calculation.
+ * </p>
  * 
- * 	µ` = 0 + (0.8722 * 0.8722) × [0.9955(1 − 0.639) + 0.9531(0 − 0.432) + 0.7242(0 − 0.303)] 
- * 		 = 0 + 0.7607(−0.272) 
- *     = −0.2069
+ * <pre>{@code
+ * µ` = 0 + (0.8722 * 0.8722) × [0.9955(1 − 0.639) + 0.9531(0 − 0.432) + 0.7242(0 − 0.303)] 
+ *    = 0 + 0.7607(−0.272) 
+ *    = −0.2069
+ * }</pre>
  * 
+ * <p>
  * Let's do the same calculation with saving of all available middle precision
+ * </p>
  * 
- *  µ` = 0 + 0.76073284 * (0.9955 * 0.361) + (0.9531 * (-0.432)) + (0.7242 * (-0.303)) 
- *     = 0.76073284 * (0.3593755 - 0.4117392 - 0.2194326) 
- *     = 0.76073284 * (-0.2717963) 
- *     = -0.20676437120049
+ * <pre>{@code
+ * µ` = 0 + 0.76073284 * (0.9955 * 0.361) + (0.9531 * (-0.432)) + (0.7242 * (-0.303)) 
+ *    = 0.76073284 * (0.3593755 - 0.4117392 - 0.2194326) 
+ *    = 0.76073284 * (-0.2717963) 
+ *    = -0.20676437120049
+ * }</pre>
  * 
+ * <p>
  * And then 
+ * </p>
  * 
+ * <pre>{@code
  * r` = -0.20676437120049 * (173.7178) + 1500 = 1464.08134831666752
+ * }</pre>
  * 
+ * <p>
  * That is rounded to 1464.08! Far away from the 1464.06. 
- * 
+ * </p>
+ * <p>
  * The reason to so different results is losing of precision. 
  * We use rounding in the calculation so we need to remember about precision.
  * In the paper µ` has precision 3 (multiplication of 0.361, -0.432 ... ), so result of 
+ * </p>
  * 
+ * <pre>{@code
  * −0.2069 * (173.7178) = -35.94221282 
+ * </pre>}
  * 
+ * <p>
  * has also precision 3, as well as the result of
+ * </p>
  * 
+ * <pre>{@code
  * -0.20676437120049 * (173.7178) = -35.91865168333248
+ * </pre>}
  * 
+ * <p>
  * It means that we can strictly believe only in one digit after decimal point.
- *  
  * Default rating, 1500, is the exact number, i.e. it has infinite precision: 1500.000000 ... Then
+ * </p>
  * 
+ * <pre>{@code
  * r` = -35.94221282 + 1500.000000 
  *    = 1464.05778718 
  *    = 1464.1 
+ * </pre>}
  * 
+ * <p>
  * So all our calculations is correct, but we can not write 1464.06, we must write 1464.1
- * 
  * Unfortunately, numbers in µ` calculation, like 0.9955, 0.361 was rounded as well. 
- * 
  * Usually, if it is not possible to not round in the middle of calculation, 
  * then rounded numbers must be computed with two more significant figures 
  * than the very final result. 
  * By this rule, final result of the  calculation that use µ` would have precision 1 
  * and the very strict answer is 1460. 
+ * </p>
  * 
+ * <p>
  * We see now, that the 1464.06 is not correct answer. 
  * Let's find the correct answer with the precision of 6 (2 digits after decimal point in our case)
+ * </p>
  * 
+ * <pre>{@code
  * µ` = 0.76073284 * (0.995498 * 0.360532) + (0.953149 * (-0.431842)) + (0.724235 * (-0.302841)) 
  *    = 0.76073284 * (0.358908884936 - 0.411609770458 - 0.219328051635) 
  *    = 0.76073284 * -0.272028937157 
  *    = -0.20694134592563
- *
+ * </pre>}
+ * 
+ * <pre>{@code
  * r` = -0.20694134592563 * 173.7178 + 1500 
  *    = -35.94939534323941 + 1500 
  *    = 1464.05060465676059 
  *    = 1464.05
- *    
+ * </pre>}   
+ * 
+ * <p>   
  * The correct answer is 1464.05.
+ * </p>
  * 
+ * <p>
  * The same with RD` calculation, fortunately it  matches a correct value
+ * </p>
  * 
+ * <p>
  * σ` is just truncated. The correct answer is 0.0599958431496. It's definitely not 0.05999.
- * 
  * If we want to round it to 6 digits after decimal point, then it would be 0.06000. 
- * 
  * It looks like better to use one more digit to represent this number, just to catch changes.
+ * </p>
  * 
+ * <pre>{@code
  * σ` = 0.059996
+ * </pre>}
  * 
  */
 object Glicko2System {  
