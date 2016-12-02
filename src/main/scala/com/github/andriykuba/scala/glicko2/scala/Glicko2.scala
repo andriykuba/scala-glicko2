@@ -129,6 +129,12 @@ import scala.annotation.tailrec
  * </pre>}   
  * 
  * <p>   
+ * The precision of -35.94939534323941 was 6 with 4 digits after decimal point. 
+ * The 1500 is exact number, so addition of -35.94939534323941 and 1500 
+ * will give precision 4 before decimal point and precision 4 after decimal point
+ * like 1464.0506. It is the final answer so we will round off two last significant number 
+ * to receive safe result. 
+ *  
  * The correct answer is 1464.05.
  * </p>
  * 
@@ -147,7 +153,7 @@ import scala.annotation.tailrec
  * </pre>}
  * 
  */
-object Glicko2System {  
+object Glicko2 {  
   
   /**
    * Player data in Glicko rating system
@@ -167,7 +173,18 @@ object Glicko2System {
   case class Player(
       rating: BigDecimal, 
       deviation: BigDecimal, 
-      volatility: BigDecimal)
+      volatility: BigDecimal){
+    
+    /**
+     * Lowest value of 95% confidence interval
+     */
+    def ratingLow = rating - (2 * deviation)
+    
+    /**
+     * Highest value of 95% confidence interval
+     */
+    def ratingHight = rating + (2 * deviation)
+  }
   
   /**
    * Game that represents an opponent and the result against it.
