@@ -166,9 +166,9 @@ object Glicko2 {
    * 
    * @see https://www.ibm.com/developerworks/library/j-jtp0114/
    * 
-   * @param rating 				is "r" in the terms of the formula.
-   * @param deviation 		is "RD" in the terms of the formula.
-   * @param volatility		is "σ" in the terms of the formula.
+   * @param rating        is "r" in the terms of the formula.
+   * @param deviation     is "RD" in the terms of the formula.
+   * @param volatility    is "σ" in the terms of the formula.
    */
   case class Player(
       rating: BigDecimal, 
@@ -208,18 +208,18 @@ object Glicko2 {
    * 
    * In the terms of formula description:
    * 
-   * @param tau 											"τ" in the terms of the formula.
-   * @param epsilon 									"ε"  in the terms of the formula.
-   * @param scale 					  				"173.7178"  just a number in the terms of the formula.
-   * @param defaultRating 						"r" of the new player in the terms of the formula.
-   * @param defaultDeviation 					"RD" of the new player in the terms of the formula.
-   * @param defaultSigma 							"σ" of the new player in the terms of the formula.
-   * @param ratingScale								number of digits to the right of decimal point 
-   * 																	in result rating.
-   * @param deviationScaleratingScale	number of digits to the right of decimal point 
-   * 																	in result deviation.
-   * @param sigmaScaleratingScale			number of digits to the right of decimal point 
-   * 																  in result scale.
+   * @param tau                       "τ" in the terms of the formula.
+   * @param epsilon                   "ε"  in the terms of the formula.
+   * @param scale                     "173.7178"  just a number in the terms of the formula.
+   * @param defaultRating             "r" of the new player in the terms of the formula.
+   * @param defaultDeviation          "RD" of the new player in the terms of the formula.
+   * @param defaultSigma              "σ" of the new player in the terms of the formula.
+   * @param ratingScale               number of digits to the right of decimal point 
+   *                                  in result rating.
+   * @param deviationScaleratingScale number of digits to the right of decimal point 
+   *                                  in result deviation.
+   * @param sigmaScaleratingScale     number of digits to the right of decimal point 
+   *                                  in result scale.
    */
   case class Parameters(
     
@@ -241,13 +241,13 @@ object Glicko2 {
   /**
    * Calculate new rating of the player on the base of the set of games.
    * 
-   * @param player			new rating would be calculated for this player.
-   * @param games				set of games that player played in the rating period.
-   * @param parameters	game parameters, like "τ", "ε" and so on.
-   * 										Default {@link Parameters Parameters} is used if none passed
+   * @param player      new rating would be calculated for this player.
+   * @param games       set of games that player played in the rating period.
+   * @param parameters  game parameters, like "τ", "ε" and so on.
+   *                    Default {@link Parameters Parameters} is used if none passed
    * 
-   * @return						new player object with the new rating 
-   * 										is called in the case of the empty {@code games}.  
+   * @return            new player object with the new rating 
+   *                    is called in the case of the empty {@code games}.  
    * Rating scale according to the calculation parameters.
    */
   def update(player:Player, games:Seq[Game] = Seq.empty)
@@ -290,11 +290,11 @@ object Glicko2 {
    * Calculate new rating of the player that 
    * does not compete during the rating period.
    * 
-   * @param player 		new rating would be calculated for this player.
-   * @param parameters	game parameters, like "τ", "ε" and so on.
-   * 										Default {@link Parameters Parameters} is used if none passed
+   * @param player      new rating would be calculated for this player.
+   * @param parameters  game parameters, like "τ", "ε" and so on.
+   *                    Default {@link Parameters Parameters} is used if none passed
    * 
-   * @return					new player object with the new rating.
+   * @return            new player object with the new rating.
    */
   private def updateWithEmptyPeriod(player:Player)
     (implicit parameters: Parameters = Parameters()) = {
@@ -307,8 +307,8 @@ object Glicko2 {
   /**
    * Create new Player with the default Glicko rating
    * 
-	 * @param parameters	game parameters. 
-	 * 										Default {@link Parameters Parameters} is used if none passed.
+	 * @param parameters   game parameters. 
+	 *                     Default {@link Parameters Parameters} is used if none passed.
    */
   def defaultPlayer()
     (implicit parameters: Parameters = Parameters()) = 
@@ -319,9 +319,9 @@ object Glicko2 {
   
   /**
    * Player scaled to Glicko2 rating system
-   * @param mu				is "µ" in the terms of the formula.
-   * @param phi				is "φ" in the terms of the formula.
-   * @param sigma			is "σ" in the terms of the formula.
+   * @param mu        is "µ" in the terms of the formula.
+   * @param phi       is "φ" in the terms of the formula.
+   * @param sigma     is "σ" in the terms of the formula.
    */
   private case class Scaled(mu: Double, phi: Double, sigma: Double)
 
@@ -329,9 +329,9 @@ object Glicko2 {
    * Oponent's data that is re-used.
    * 
    * @param opponent  opponent of the player
-   * @param gphi  		is "g(φ)" in the terms of the formula.
-   * @param E					is "E" in the terms of the formula.
-   * @param s					is "s" in the terms of the formula.
+   * @param gphi      is "g(φ)" in the terms of the formula.
+   * @param E         is "E" in the terms of the formula.
+   * @param s         is "s" in the terms of the formula.
    */
   private case class Opponent(opponent: Scaled, gphi: Double, E:Double, s:Double)
   
@@ -343,7 +343,7 @@ object Glicko2 {
     /**
      * Convert to the Glicko2 rating from the Glicko
      * 
-     * @param player		player in terms of Glicko rating system
+     * @param player    player in terms of Glicko rating system
      */
     def glicko2(player: Player)
       (implicit parameters: Parameters) = 
@@ -356,12 +356,12 @@ object Glicko2 {
     /**
      * Convert to the Glicko2 player data to player of Glicko rating system.
      * 
-	   * @param mu				is "µ" in the terms of the formula.
-  	 * @param phi				is "φ" in the terms of the formula.
-   	 * @param sigma	  	is "σ" in the terms of the formula.
+	   * @param mu         is "µ" in the terms of the formula.
+  	 * @param phi        is "φ" in the terms of the formula.
+   	 * @param sigma      is "σ" in the terms of the formula.
    	 * 
-   	 * @return 					{@link Player Player} with the rating scaled according to the 
-   	 * 									calculation parameters
+   	 * @return          {@link Player Player} with the rating scaled according to the 
+   	 *                  calculation parameters
      */
     def glicko(mu: Double, phi: Double, sigma: Double)
       (implicit parameters: Parameters) = Player(
@@ -374,8 +374,8 @@ object Glicko2 {
     /**
      * Scale number, i.e. round double to some number of decimal digits
      * 
-     * @param number		number to be scaled
-     * @param places		number of digits to the right of decimal point in result number
+     * @param number    number to be scaled
+     * @param places    number of digits to the right of decimal point in result number
      */
     private def scale(number: Double, places:Int) = 
       BigDecimal(number).setScale(places, BigDecimal.RoundingMode.HALF_UP)
@@ -384,8 +384,8 @@ object Glicko2 {
      * Convert opponent from the {@link Game} to the Glicko2 scale and calculate 
      * "g(φ)" and "E" for it.
      * 
-     * @param player	Player, whose rating is calculated. 
-     * @param game		Game data - opponent and game result.
+     * @param player  Player, whose rating is calculated. 
+     * @param game    Game data - opponent and game result.
      */
     def glicko2Opponent(player: Scaled, game: Game)
       (implicit parameters: Parameters) ={
