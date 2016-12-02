@@ -246,8 +246,8 @@ object Glicko2 {
    * @param parameters	game parameters, like "τ", "ε" and so on.
    * 										Default {@link Parameters Parameters} is used if none passed
    * 
-   * @return						new player object with the new rating. {@link #calculateEmptyPeriod(Player)
-   * calculateEmptyPeriod} is called in the case of the empty {@code games}.  
+   * @return						new player object with the new rating 
+   * 										is called in the case of the empty {@code games}.  
    * Rating scale according to the calculation parameters.
    */
   def update(player:Player, games:Seq[Game] = Seq.empty)
