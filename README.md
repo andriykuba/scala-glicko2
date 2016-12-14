@@ -1,5 +1,6 @@
 # Scala implementation of the Glicko-2 system
 
+[![Build Status](https://travis-ci.org/andriykuba/scala-glicko2.svg?branch=master)](https://travis-ci.org/andriykuba/scala-glicko2) 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.andriykuba/scala-glicko2/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.andriykuba/scala-glicko2)
 
 > The Glicko rating system and Glicko-2 rating system are methods for assessing a player's strength in games of skill, such as chess and go. 
